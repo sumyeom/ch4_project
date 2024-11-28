@@ -1,5 +1,6 @@
 package com.sparta.currency_user.exception;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,6 +27,11 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<ErrorResponseEntity> handleTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        return ErrorResponseEntity.toResponseEntity(ErrorCode.INVALID_INPUT_VALUE, "잘못된 입력값입니다.");
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<ErrorResponseEntity> handleTypeMismatchException(IllegalArgumentException e) {
         return ErrorResponseEntity.toResponseEntity(ErrorCode.INVALID_INPUT_VALUE, "잘못된 입력값입니다.");
     }
 
