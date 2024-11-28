@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/exchanges")
 @RequiredArgsConstructor
@@ -23,7 +25,15 @@ public class ExchangeController {
     ){
         ExchangeResponseDto exchangeResponseDto = exchangeService.createExchange(requestDto,sessionId);
 
-        return new ResponseEntity<>(exchangeResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(exchangeResponseDto, HttpStatus.CREATED);
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<ExchangeResponseDto>> findAllExchangesByUserId(
+            @PathVariable Long userId
+    ){
+        List<ExchangeResponseDto> exchangeResponseDtos = exchangeService.findAllExchangesByUserId(userId);
+
+        return new ResponseEntity<>(exchangeResponseDtos, HttpStatus.OK);
+    }
 }
