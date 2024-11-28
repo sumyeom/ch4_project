@@ -6,6 +6,8 @@ import com.sparta.currency_user.dto.ExchangeUpdateStatusDto;
 import com.sparta.currency_user.entity.Currency;
 import com.sparta.currency_user.entity.Exchange;
 import com.sparta.currency_user.entity.User;
+import com.sparta.currency_user.exception.CustomException;
+import com.sparta.currency_user.exception.ErrorCode;
 import com.sparta.currency_user.repository.CurrencyRepository;
 import com.sparta.currency_user.repository.ExchangeRepository;
 import com.sparta.currency_user.repository.UserRepository;
@@ -27,7 +29,7 @@ public class ExchangeService {
 
     public ExchangeResponseDto createExchange(ExchangeRequestDto requestDto, Long sessionId){
         User findUser = userRepository.findById(sessionId)
-                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         Currency findCurrency = currencyRepository.findByCurrencyName(requestDto.getCurrenyName());
 
@@ -53,7 +55,7 @@ public class ExchangeService {
 
     public List<ExchangeResponseDto> findAllExchangesByUserId(Long userId) {
         User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         List<Exchange> findExchanges = exchangeRepository.findAllByUserId(userId);
 
@@ -62,7 +64,7 @@ public class ExchangeService {
 
     public ExchangeResponseDto updateExchangeStatus(Long exchangeId, ExchangeUpdateStatusDto dto) {
         Exchange findExchange = exchangeRepository.findById(exchangeId)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(()-> new CustomException(ErrorCode.EXCHANGE_NOT_FOUND));
 
         findExchange.updateStatus(dto.getStatus());
         Exchange updateExchange = exchangeRepository.save(findExchange);

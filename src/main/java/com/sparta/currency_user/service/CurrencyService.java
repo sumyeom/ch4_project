@@ -3,6 +3,8 @@ package com.sparta.currency_user.service;
 import com.sparta.currency_user.dto.CurrencyRequestDto;
 import com.sparta.currency_user.dto.CurrencyResponseDto;
 import com.sparta.currency_user.entity.Currency;
+import com.sparta.currency_user.exception.CustomException;
+import com.sparta.currency_user.exception.ErrorCode;
 import com.sparta.currency_user.repository.CurrencyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ public class CurrencyService {
     }
 
     public Currency findCurrencyById(Long id) {
-        return currencyRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("통화를 찾을 수 없습니다."));
+        return currencyRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.CURRENCY_NOT_FOUND));
     }
 
     public List<CurrencyResponseDto> findAll() {

@@ -6,12 +6,14 @@ import com.sparta.currency_user.dto.UserLoginResponseDto;
 import com.sparta.currency_user.dto.UserRequestDto;
 import com.sparta.currency_user.dto.UserResponseDto;
 import com.sparta.currency_user.service.UserService;
+import com.sparta.currency_user.util.ValidationUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +36,14 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserResponseDto> createUser(
+            @Valid @RequestBody UserRequestDto userRequestDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            ValidationUtils.bindErrorMessage(bindingResult);
+        }
+
         return ResponseEntity.ok().body(userService.save(userRequestDto));
     }
 

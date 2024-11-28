@@ -5,6 +5,8 @@ import com.sparta.currency_user.dto.UserLoginResponseDto;
 import com.sparta.currency_user.dto.UserRequestDto;
 import com.sparta.currency_user.dto.UserResponseDto;
 import com.sparta.currency_user.entity.User;
+import com.sparta.currency_user.exception.CustomException;
+import com.sparta.currency_user.exception.ErrorCode;
 import com.sparta.currency_user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +28,7 @@ public class UserService {
     }
 
     public User findUserById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+        return userRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     }
 
     public List<UserResponseDto> findAll() {
@@ -52,8 +54,10 @@ public class UserService {
         Optional<User> findUser = userRepository.findUserByEmail(email);
 
         // 이메일이 다르거나 비밀번호가 다른 경우
-        if (findUser.isEmpty() || !passwordEncoder.matches(password,findUser.get().getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        if (findUser.isEmpty() ) {
+            throw new CustomException(ErrorCode.INVALID_EMAIL);
+        } else if(!passwordEncoder.matches(password,findUser.get().getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
         return new UserLoginResponseDto(findUser.get().getId(), findUser.get().getEmail());

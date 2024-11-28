@@ -5,9 +5,12 @@ import com.sparta.currency_user.dto.ExchangeRequestDto;
 import com.sparta.currency_user.dto.ExchangeResponseDto;
 import com.sparta.currency_user.dto.ExchangeUpdateStatusDto;
 import com.sparta.currency_user.service.ExchangeService;
+import com.sparta.currency_user.util.ValidationUtils;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,9 +24,14 @@ public class ExchangeController {
 
     @PostMapping
     public ResponseEntity<ExchangeResponseDto> createExchange(
-            @RequestBody ExchangeRequestDto requestDto,
-            @SessionAttribute(name = Const.SESSION_KEY) Long sessionId
+            @Valid @RequestBody ExchangeRequestDto requestDto,
+            @SessionAttribute(name = Const.SESSION_KEY) Long sessionId,
+            BindingResult bindingResult
     ){
+        if (bindingResult.hasErrors()) {
+            ValidationUtils.bindErrorMessage(bindingResult);
+        }
+
         ExchangeResponseDto exchangeResponseDto = exchangeService.createExchange(requestDto,sessionId);
 
         return new ResponseEntity<>(exchangeResponseDto, HttpStatus.CREATED);
@@ -41,8 +49,13 @@ public class ExchangeController {
     @PatchMapping({"/{exchangeId}"})
     public ResponseEntity<ExchangeResponseDto> updateExchangeStatus(
             @PathVariable Long exchangeId,
-            @RequestBody ExchangeUpdateStatusDto dto
+            @Valid @RequestBody ExchangeUpdateStatusDto dto,
+            BindingResult bindingResult
     ){
+        if (bindingResult.hasErrors()) {
+            ValidationUtils.bindErrorMessage(bindingResult);
+        }
+
         ExchangeResponseDto exchangeResponseDto = exchangeService.updateExchangeStatus(exchangeId, dto);
 
         return new ResponseEntity<>(exchangeResponseDto,HttpStatus.OK);
