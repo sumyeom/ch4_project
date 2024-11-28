@@ -8,6 +8,7 @@ Spring을 이용하여 환율을 요청하는 앱 서버 구현
 
 ---
 ### ERD
-![image](https://github.com/user-attachments/assets/8dab415d-6711-4372-8da7-b1eeaf150c6e)
+![image](https://github.com/user-attachments/assets/2b751a0d-5653-481d-9d68-ce6005fc734e)
+
 
 
