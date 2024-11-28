@@ -20,9 +20,9 @@ public class CurrencyController {
         return ResponseEntity.ok().body(currencyService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CurrencyResponseDto> findCurrency(@PathVariable Long id) {
-        return ResponseEntity.ok().body(currencyService.findById(id));
+    @GetMapping("/{currencyId}")
+    public ResponseEntity<CurrencyResponseDto> findCurrency(@PathVariable Long currencyId) {
+        return ResponseEntity.ok().body(currencyService.findById(currencyId));
     }
 
     @PostMapping
