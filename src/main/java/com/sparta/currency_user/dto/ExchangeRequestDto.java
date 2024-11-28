@@ -7,11 +7,11 @@ import lombok.Getter;
 
 @Getter
 public class ExchangeRequestDto {
-    private String currenyName;
+    private final String currenyName;
     private final Long money;
 
-    public ExchangeRequestDto(String currentName, Long money){
-        this.currenyName = currentName;
+    public ExchangeRequestDto(String currenyName, Long money){
+        this.currenyName = currenyName;
         this.money = money;
     }
 

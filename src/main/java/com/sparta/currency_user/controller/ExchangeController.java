@@ -3,6 +3,7 @@ package com.sparta.currency_user.controller;
 import com.sparta.currency_user.config.Const;
 import com.sparta.currency_user.dto.ExchangeRequestDto;
 import com.sparta.currency_user.dto.ExchangeResponseDto;
+import com.sparta.currency_user.dto.ExchangeUpdateStatusDto;
 import com.sparta.currency_user.service.ExchangeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,5 +36,15 @@ public class ExchangeController {
         List<ExchangeResponseDto> exchangeResponseDtos = exchangeService.findAllExchangesByUserId(userId);
 
         return new ResponseEntity<>(exchangeResponseDtos, HttpStatus.OK);
+    }
+
+    @PatchMapping({"/{exchangeId}"})
+    public ResponseEntity<ExchangeResponseDto> updateExchangeStatus(
+            @PathVariable Long exchangeId,
+            @RequestBody ExchangeUpdateStatusDto dto
+    ){
+        ExchangeResponseDto exchangeResponseDto = exchangeService.updateExchangeStatus(exchangeId, dto);
+
+        return new ResponseEntity<>(exchangeResponseDto,HttpStatus.OK);
     }
 }

@@ -2,6 +2,7 @@ package com.sparta.currency_user.service;
 
 import com.sparta.currency_user.dto.ExchangeRequestDto;
 import com.sparta.currency_user.dto.ExchangeResponseDto;
+import com.sparta.currency_user.dto.ExchangeUpdateStatusDto;
 import com.sparta.currency_user.entity.Currency;
 import com.sparta.currency_user.entity.Exchange;
 import com.sparta.currency_user.entity.User;
@@ -57,5 +58,23 @@ public class ExchangeService {
         List<Exchange> findExchanges = exchangeRepository.findAllByUserId(userId);
 
         return findExchanges.stream().map(ExchangeResponseDto::toDto).toList();
+    }
+
+    public ExchangeResponseDto updateExchangeStatus(Long exchangeId, ExchangeUpdateStatusDto dto) {
+        Exchange findExchange = exchangeRepository.findById(exchangeId)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        findExchange.updateStatus(dto.getStatus());
+        Exchange updateExchange = exchangeRepository.save(findExchange);
+        return new ExchangeResponseDto(
+                updateExchange.getId(),
+                updateExchange.getUser().getId(),
+                updateExchange.getCurrency().getId(),
+                updateExchange.getAmountInKrw(),
+                updateExchange.getAmountAfterExchange(),
+                updateExchange.getStatus(),
+                updateExchange.getCreatedAt(),
+                updateExchange.getModifiedAt()
+        );
     }
 }

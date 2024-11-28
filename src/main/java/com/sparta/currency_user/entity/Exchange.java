@@ -41,4 +41,8 @@ public class Exchange extends BaseEntity{
 
     public Exchange() {
     }
+
+    public void updateStatus(String status){
+        this.status = status;
+    }
 }
