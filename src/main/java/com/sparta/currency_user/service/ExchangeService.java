@@ -3,6 +3,7 @@ package com.sparta.currency_user.service;
 import com.sparta.currency_user.dto.ExchangeRequestDto;
 import com.sparta.currency_user.dto.ExchangeResponseDto;
 import com.sparta.currency_user.dto.ExchangeUpdateStatusDto;
+import com.sparta.currency_user.dto.UserTotalInfoDto;
 import com.sparta.currency_user.entity.Currency;
 import com.sparta.currency_user.entity.Exchange;
 import com.sparta.currency_user.entity.User;
@@ -78,5 +79,9 @@ public class ExchangeService {
                 updateExchange.getCreatedAt(),
                 updateExchange.getModifiedAt()
         );
+    }
+
+    public UserTotalInfoDto findTotalExchangeInfo(Long userId) {
+        return exchangeRepository.findUserTotalInfo(userId);
     }
 }

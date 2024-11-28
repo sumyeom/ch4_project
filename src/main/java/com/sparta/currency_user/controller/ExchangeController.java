@@ -4,6 +4,7 @@ import com.sparta.currency_user.config.Const;
 import com.sparta.currency_user.dto.ExchangeRequestDto;
 import com.sparta.currency_user.dto.ExchangeResponseDto;
 import com.sparta.currency_user.dto.ExchangeUpdateStatusDto;
+import com.sparta.currency_user.dto.UserTotalInfoDto;
 import com.sparta.currency_user.service.ExchangeService;
 import com.sparta.currency_user.util.ValidationUtils;
 import jakarta.validation.Valid;
@@ -46,6 +47,15 @@ public class ExchangeController {
         return new ResponseEntity<>(exchangeResponseDtos, HttpStatus.OK);
     }
 
+    @GetMapping("/{userId}/totals")
+    public ResponseEntity<UserTotalInfoDto> findTotalExchangeInfo(
+            @PathVariable Long userId
+    ){
+        UserTotalInfoDto userTotalInfoDto = exchangeService.findTotalExchangeInfo(userId);
+
+        return new ResponseEntity<>(userTotalInfoDto, HttpStatus.OK);
+    }
+
     @PatchMapping({"/{exchangeId}"})
     public ResponseEntity<ExchangeResponseDto> updateExchangeStatus(
             @PathVariable Long exchangeId,
@@ -60,4 +70,6 @@ public class ExchangeController {
 
         return new ResponseEntity<>(exchangeResponseDto,HttpStatus.OK);
     }
+
+
 }

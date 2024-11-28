@@ -23,7 +23,7 @@ public class Exchange extends BaseEntity{
     private Currency currency;
 
     @Column(nullable = false)
-    private Long amountInKrw;
+    private BigDecimal amountInKrw;
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal amountAfterExchange;
@@ -31,7 +31,7 @@ public class Exchange extends BaseEntity{
     @Column(nullable = false, length = 10)
     private String status;
 
-    public Exchange(User user, Currency currency, Long amountInKrw, BigDecimal amountAfterExchange, String status){
+    public Exchange(User user, Currency currency, BigDecimal amountInKrw, BigDecimal amountAfterExchange, String status){
         this.user = user;
         this.currency = currency;
         this.amountInKrw = amountInKrw;
