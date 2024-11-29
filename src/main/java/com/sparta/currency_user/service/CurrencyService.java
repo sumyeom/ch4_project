@@ -25,7 +25,7 @@ public class CurrencyService {
     @PostConstruct
     public void validateExchangeRate(){
         BigDecimal MIN_RATE = new BigDecimal("0.0001");
-        BigDecimal MAX_RATE = new BigDecimal("1000000");
+        BigDecimal MAX_RATE = new BigDecimal("1000000000000");
         List<Currency> currencies = currencyRepository.findAll();
         for(Currency cu : currencies){
             BigDecimal checkedExchangeRate = cu.getExchangeRate();
@@ -51,6 +51,12 @@ public class CurrencyService {
 
     @Transactional
     public CurrencyResponseDto save(CurrencyRequestDto currencyRequestDto) {
+        Currency findCurrency = currencyRepository.findByCurrencyName(currencyRequestDto.getCurrencyName());
+
+        if(findCurrency!=null){
+            throw new CustomException(ErrorCode.INVALID_INPUT_CURRENCY);
+        }
+
         Currency savedCurrency = currencyRepository.save(currencyRequestDto.toEntity());
         return new CurrencyResponseDto(savedCurrency);
     }

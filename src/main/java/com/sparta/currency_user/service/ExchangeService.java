@@ -15,6 +15,7 @@ import com.sparta.currency_user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
@@ -28,6 +29,7 @@ public class ExchangeService {
     private final UserRepository userRepository;
     private final CurrencyRepository currencyRepository;
 
+    @Transactional
     public ExchangeResponseDto createExchange(ExchangeRequestDto requestDto, Long sessionId){
         User findUser = userRepository.findById(sessionId)
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -85,6 +87,9 @@ public class ExchangeService {
         return exchangeRepository.findUserTotalInfo(userId);
     }
 
+    /**
+     * 통화 선택 후 계산 하는 메서드
+     */
     private BigDecimal selectCurrencySymbol(BigDecimal fromAmount, BigDecimal exchangeRate, String currencyName){
         BigDecimal calAmount;
         switch (currencyName){
@@ -92,8 +97,7 @@ public class ExchangeService {
                 calAmount = fromAmount.divide(exchangeRate,2, RoundingMode.HALF_UP);
                 break;
             case "JPY":
-                calAmount = fromAmount.divide(exchangeRate,2, RoundingMode.HALF_UP)
-                        .multiply(new BigDecimal("100")).setScale(0, RoundingMode.HALF_UP);
+                calAmount = fromAmount.divide(exchangeRate,0, RoundingMode.HALF_UP);
                 break;
             default:
                 throw new CustomException(ErrorCode.ILLEGAL_DATA);
