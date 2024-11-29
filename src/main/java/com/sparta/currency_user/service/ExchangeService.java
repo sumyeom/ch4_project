@@ -84,6 +84,9 @@ public class ExchangeService {
     }
 
     public UserTotalInfoDto findTotalExchangeInfo(Long userId) {
+        User findUser = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
         return exchangeRepository.findUserTotalInfo(userId);
     }
 
