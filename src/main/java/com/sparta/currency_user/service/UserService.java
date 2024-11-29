@@ -37,6 +37,13 @@ public class UserService {
 
     @Transactional
     public UserResponseDto save(UserRequestDto userRequestDto) {
+
+        Optional<User> findUser = userRepository.findUserByEmail(userRequestDto.getEmail());
+
+        if(findUser.isPresent()){
+            throw new CustomException(ErrorCode.INVALID_INPUT_EMAIL);
+        }
+
         User savedUser = userRepository.save(userRequestDto.toEntity());
         return new UserResponseDto(savedUser);
     }
