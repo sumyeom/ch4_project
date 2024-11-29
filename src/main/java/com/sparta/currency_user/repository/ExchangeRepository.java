@@ -13,6 +13,6 @@ import java.util.List;
 public interface ExchangeRepository extends JpaRepository<Exchange, Long> {
     List<Exchange> findAllByUserId(Long userId);
 
-    @Query("select new com.sparta.currency_user.dto.UserTotalInfoDto(COUNT(ex.id), SUM(ex.amountInKrw)) from Exchange ex where ex.user.id = :userId group by ex.currency.currencyName")
+    @Query("select new com.sparta.currency_user.dto.UserTotalInfoDto(COUNT(ex.id), SUM(ex.amountInKrw)) from Exchange ex where ex.user.id = :userId group by ex.user.id")
     UserTotalInfoDto findUserTotalInfo(@Param("userId") Long userId);
 }

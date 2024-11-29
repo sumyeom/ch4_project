@@ -32,11 +32,11 @@ public class ExchangeService {
         User findUser = userRepository.findById(sessionId)
                 .orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        Currency findCurrency = currencyRepository.findByCurrencyName(requestDto.getCurrenyName());
-
-        // 입력한 원화
-        BigDecimal amountKrw = new BigDecimal(String.valueOf(requestDto.getMoney()));
-        BigDecimal calExchange = amountKrw.divide(findCurrency.getExchangeRate(),2, RoundingMode.HALF_UP);
+        Currency findCurrency = currencyRepository.findByCurrencyName(requestDto.getCurrencyName());
+        if(findCurrency == null){
+            throw new CustomException(ErrorCode.CURRENCY_NOT_FOUND);
+        }
+        BigDecimal calExchange = selectCurrencySymbol(requestDto.getMoney(), findCurrency.getExchangeRate(),findCurrency.getCurrencyName());
 
         Exchange createdExchange = new Exchange(findUser, findCurrency, requestDto.getMoney(), calExchange, "normal");
 
@@ -83,5 +83,22 @@ public class ExchangeService {
 
     public UserTotalInfoDto findTotalExchangeInfo(Long userId) {
         return exchangeRepository.findUserTotalInfo(userId);
+    }
+
+    private BigDecimal selectCurrencySymbol(BigDecimal fromAmount, BigDecimal exchangeRate, String currencyName){
+        BigDecimal calAmount;
+        switch (currencyName){
+            case "USD", "EUR" :
+                calAmount = fromAmount.divide(exchangeRate,2, RoundingMode.HALF_UP);
+                break;
+            case "JPY":
+                calAmount = fromAmount.divide(exchangeRate,2, RoundingMode.HALF_UP)
+                        .multiply(new BigDecimal("100")).setScale(0, RoundingMode.HALF_UP);
+                break;
+            default:
+                throw new CustomException(ErrorCode.ILLEGAL_DATA);
+        }
+
+        return calAmount;
     }
 }
