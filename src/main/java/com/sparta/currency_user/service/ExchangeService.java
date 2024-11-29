@@ -93,8 +93,11 @@ public class ExchangeService {
     private BigDecimal selectCurrencySymbol(BigDecimal fromAmount, BigDecimal exchangeRate, String currencyName){
         BigDecimal calAmount;
         switch (currencyName){
-            case "USD", "EUR" :
+            case "USD", "EUR", "COP" :
                 calAmount = fromAmount.divide(exchangeRate,2, RoundingMode.HALF_UP);
+                break;
+            case "AUD" :
+                calAmount = fromAmount.divide(exchangeRate,1, RoundingMode.HALF_UP);
                 break;
             case "JPY":
                 calAmount = fromAmount.divide(exchangeRate,0, RoundingMode.HALF_UP);
