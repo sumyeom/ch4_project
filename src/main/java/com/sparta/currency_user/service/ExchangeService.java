@@ -29,6 +29,12 @@ public class ExchangeService {
     private final UserRepository userRepository;
     private final CurrencyRepository currencyRepository;
 
+    /**
+     * 환전 요청 처리 메서드
+     * @param requestDto
+     * @param sessionId
+     * @return
+     */
     @Transactional
     public ExchangeResponseDto createExchange(ExchangeRequestDto requestDto, Long sessionId){
         User findUser = userRepository.findById(sessionId)
@@ -56,6 +62,11 @@ public class ExchangeService {
         );
     }
 
+    /**
+     * 유저의 환전 요청 조회 메서드
+     * @param userId
+     * @return
+     */
     public List<ExchangeResponseDto> findAllExchangesByUserId(Long userId) {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
@@ -65,6 +76,12 @@ public class ExchangeService {
         return findExchanges.stream().map(ExchangeResponseDto::toDto).toList();
     }
 
+    /**
+     * 환전 상태 변경 메서드
+     * @param exchangeId
+     * @param dto
+     * @return
+     */
     public ExchangeResponseDto updateExchangeStatus(Long exchangeId, ExchangeUpdateStatusDto dto) {
         Exchange findExchange = exchangeRepository.findById(exchangeId)
                 .orElseThrow(()-> new CustomException(ErrorCode.EXCHANGE_NOT_FOUND));
@@ -83,6 +100,11 @@ public class ExchangeService {
         );
     }
 
+    /**
+     * 특정 유저 환전 요청 총합 정보 메서드
+     * @param userId
+     * @return
+     */
     public UserTotalInfoDto findTotalExchangeInfo(Long userId) {
         User findUser = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));

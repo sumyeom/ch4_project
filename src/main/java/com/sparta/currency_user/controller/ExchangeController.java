@@ -23,6 +23,13 @@ public class ExchangeController {
 
     private final ExchangeService exchangeService;
 
+    /**
+     * 환전 요청 API
+     * @param requestDto
+     * @param sessionId
+     * @param bindingResult
+     * @return
+     */
     @PostMapping
     public ResponseEntity<ExchangeResponseDto> createExchange(
             @Valid @RequestBody ExchangeRequestDto requestDto,
@@ -38,6 +45,11 @@ public class ExchangeController {
         return new ResponseEntity<>(exchangeResponseDto, HttpStatus.CREATED);
     }
 
+    /**
+     * 유저의 환전 요청 조회 API
+     * @param userId
+     * @return
+     */
     @GetMapping("/{userId}")
     public ResponseEntity<List<ExchangeResponseDto>> findAllExchangesByUserId(
             @PathVariable Long userId
@@ -47,6 +59,11 @@ public class ExchangeController {
         return new ResponseEntity<>(exchangeResponseDtos, HttpStatus.OK);
     }
 
+    /**
+     * 유저의 환전 요청 총합 정보 조회 API
+     * @param userId
+     * @return
+     */
     @GetMapping("/{userId}/totals")
     public ResponseEntity<UserTotalInfoDto> findTotalExchangeInfo(
             @PathVariable Long userId
@@ -56,6 +73,13 @@ public class ExchangeController {
         return new ResponseEntity<>(userTotalInfoDto, HttpStatus.OK);
     }
 
+    /**
+     * 특정 환전 상태 변경 API
+     * @param exchangeId
+     * @param dto
+     * @param bindingResult
+     * @return
+     */
     @PatchMapping({"/{exchangeId}"})
     public ResponseEntity<ExchangeResponseDto> updateExchangeStatus(
             @PathVariable Long exchangeId,
